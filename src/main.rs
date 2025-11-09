@@ -3,42 +3,60 @@
 
 mod core;
 mod platforms;
-
 use anyhow::Result;
 use core::config::Config;
 use core::runner::Runner;
-use std::time::Instant; // ✅ new import
+use core::logger;
+use colored::Colorize;
+use std::time::Instant;
 
 fn main() -> Result<()> {
-    // Start timer
-    let start_time = Instant::now(); // ✅ start
+    // Initialize logger & print header
+    logger::init();
+    logger::header(env!("CARGO_PKG_VERSION")); // ✅ pretty header
 
-    // Load configuration (defaults if missing).
+    // Start timer
+    let start_time = Instant::now();
+
+    // Load config (defaults if missing)
     let config = Config::load().unwrap_or_default();
+
+    // Show important output paths
+    #[cfg(target_os = "windows")]
+    {
+        if let Some(path) = dirs::desktop_dir() {
+            println!("{} {}", "📁 Desktop:".bright_cyan(), path.display());
+        }
+
+        if let Some(mut telemetry) = dirs::home_dir() {
+            telemetry.push("Documents");
+            telemetry.push("MagnetTelemetry");
+            println!("{} {}", "🧪 Telemetry:".bright_cyan(), telemetry.display());
+        }
+    }
 
     // Create runner
     let mut runner = Runner::new(config);
 
-    // Register platform-specific actions (Windows-only for now)
+    // Register Windows modules
     #[cfg(target_os = "windows")]
     {
         use platforms::windows::actions::ransom_note::RansomNote;
-        runner.register(Box::new(RansomNote::default()));
-
         use platforms::windows::actions::discovery_sim::DiscoverySim;
+
+        runner.register(Box::new(RansomNote::default()));
         runner.register(Box::new(DiscoverySim::default()));
     }
 
-    println!("[magnet] Starting simulations...");
-    runner.run_all()?;
-    println!("[magnet] All simulations finished.");
+    println!();
+    println!("{}", "▶ Running simulations...".bright_green().bold());
 
-    // ✅ Stop timer and print elapsed duration
+    // Run
+    runner.run_all()?; // (Old plain prints inside Runner remain for now)
+
+    // End
     let elapsed = start_time.elapsed();
-    println!(
-        "[magnet] Total elapsed time: {:.3?} seconds",
-        elapsed
-    );
+    logger::summary(elapsed); // ✅ fancy summary footer
 
     Ok(())
 }

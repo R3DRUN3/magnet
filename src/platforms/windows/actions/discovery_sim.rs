@@ -1,5 +1,6 @@
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;
+use crate::core::logger;
 use anyhow::{anyhow, Context, Result};
 use chrono::Utc;
 use dirs::home_dir;
@@ -143,16 +144,20 @@ impl Simulation for DiscoverySim {
             .unwrap_or_else(|_| "<unknown>".to_string());
 
         for cmd in Self::default_commands() {
+            // Minimal single-line start
+            logger::action_running(&format!("Running: {}", cmd));
+
             if cfg.dry_run {
-                println!("[discovery][dry-run] Would run: {}", cmd);
+                logger::info(&format!("dry-run: would run '{}'", cmd));
+                logger::action_ok();
                 continue;
             }
 
-            println!("[discovery] Running: {}", cmd);
             let (exit_code, stdout, stderr) = match Self::capture_output(cmd) {
                 Ok(r) => r,
                 Err(e) => {
-                    println!("[discovery] Error running '{}': {}", cmd, e);
+                    logger::action_fail("command execution failed");
+                    // record the failure for SOC to see
                     let rec = CmdRecord {
                         test_id: cfg.test_id.clone(),
                         timestamp: Utc::now().to_rfc3339(),
@@ -162,7 +167,10 @@ impl Simulation for DiscoverySim {
                         stderr: format!("failed to run command: {}", e),
                         parent: parent.clone(),
                     };
-                    let _ = Self::write_record(cfg, &rec);
+                    // Best-effort write; log error if it fails
+                    if let Err(wr_err) = Self::write_record(cfg, &rec) {
+                        logger::error(&format!("failed to write telemetry: {}", wr_err));
+                    }
                     continue;
                 }
             };
@@ -178,12 +186,17 @@ impl Simulation for DiscoverySim {
             };
 
             match Self::write_record(cfg, &rec) {
-                Ok(_) => println!("[discovery] Wrote telemetry for command: {}", cmd),
-                Err(e) => println!("[discovery] Failed to write telemetry: {}", e),
+                Ok(_) => {
+                    logger::action_ok();
+                }
+                Err(e) => {
+                    logger::error(&format!("failed to write telemetry: {}", e));
+                    logger::action_fail("failed to write telemetry");
+                }
             }
         }
 
-        println!("[discovery] Done. MAGNET-TEST-ID: {}", cfg.test_id);
+        logger::info(&format!("Done. MAGNET-TEST-ID: {}", cfg.test_id));
         Ok(())
     }
 }

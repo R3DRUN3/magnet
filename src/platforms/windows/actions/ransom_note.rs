@@ -1,6 +1,7 @@
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;
 use crate::core::telemetry::{ActionRecord, write_action_record};
+use crate::core::logger;
 use anyhow::{Context, Result};
 use chrono::Utc;
 use dirs::desktop_dir;
@@ -53,10 +54,12 @@ impl Simulation for RansomNote {
         let desktop = Self::desktop_path().context("could not determine Desktop path")?;
         let path = Self::note_path(&desktop);
 
-        // Dry-run: only print what would be written.
+        // Minimal, one-line status: starting action
+        logger::action_running("Writing ransom note to Desktop");
+
+        // Dry-run: only record and show minimal status
         if cfg.dry_run {
-            println!("[ransom_note][dry-run] Would write to: {}", path.display());
-            println!("[ransom_note][dry-run] Content:\n{}", content);
+            logger::info(&format!("dry-run: would write to {}", path.display()));
 
             // still record an action entry to telemetry in dry-run mode
             let rec = ActionRecord {
@@ -68,37 +71,69 @@ impl Simulation for RansomNote {
                 artifact_path: Some(path.display().to_string()),
             };
             let _ = write_action_record(cfg, &rec);
+
+            logger::action_ok();
             return Ok(());
         }
 
-        println!("[ransom_note] Writing test ransom note to: {}", path.display());
-
-        let mut file = OpenOptions::new()
+        // Try to write the file
+        match OpenOptions::new()
             .create(true)
             .write(true)
             .truncate(true)
             .open(&path)
-            .with_context(|| format!("failed to open file {}", path.display()))?;
+            .with_context(|| format!("failed to open file {}", path.display()))
+        {
+            Ok(mut file) => {
+                if let Err(e) = file.write_all(content.as_bytes())
+                    .with_context(|| format!("failed to write to {}", path.display()))
+                {
+                    logger::action_fail("failed to write ransom note");
+                    // record failure to telemetry
+                    let rec = ActionRecord {
+                        test_id: cfg.test_id.clone(),
+                        timestamp: Utc::now().to_rfc3339(),
+                        action: "ransom_note".into(),
+                        status: "failed".into(),
+                        details: format!("write error: {}", e),
+                        artifact_path: Some(path.display().to_string()),
+                    };
+                    let _ = write_action_record(cfg, &rec);
+                    return Err(e);
+                }
 
-        file.write_all(content.as_bytes())
-            .with_context(|| format!("failed to write to {}", path.display()))?;
+                // success
+                logger::action_ok();
 
-        println!("[ransom_note] Done. MAGNET-TEST-ID: {}", test_id);
+                // Write telemetry record for this action
+                let rec = ActionRecord {
+                    test_id: cfg.test_id.clone(),
+                    timestamp: Utc::now().to_rfc3339(),
+                    action: "ransom_note".into(),
+                    status: "written".into(),
+                    details: format!("Wrote ransom note to Desktop: {}", path.display()),
+                    artifact_path: Some(path.display().to_string()),
+                };
 
-        // Write telemetry record for this action
-        let rec = ActionRecord {
-            test_id: cfg.test_id.clone(),
-            timestamp: Utc::now().to_rfc3339(),
-            action: "ransom_note".into(),
-            status: "written".into(),
-            details: format!("Wrote ransom note to Desktop: {}", path.display()),
-            artifact_path: Some(path.display().to_string()),
-        };
+                if let Err(e) = write_action_record(cfg, &rec) {
+                    logger::warn(&format!("failed to write telemetry record: {}", e));
+                }
 
-        if let Err(e) = write_action_record(cfg, &rec) {
-            println!("[ransom_note] Warning: failed to write telemetry record: {}", e);
+                Ok(())
+            }
+            Err(e) => {
+                logger::action_fail("failed to open ransom note file");
+                let rec = ActionRecord {
+                    test_id: cfg.test_id.clone(),
+                    timestamp: Utc::now().to_rfc3339(),
+                    action: "ransom_note".into(),
+                    status: "failed".into(),
+                    details: format!("open error: {}", e),
+                    artifact_path: Some(path.display().to_string()),
+                };
+                let _ = write_action_record(cfg, &rec);
+                Err(e)
+            }
         }
-
-        Ok(())
     }
 }
