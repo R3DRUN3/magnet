@@ -31,6 +31,22 @@ cargo build --target x86_64-unknown-linux-gnu --release
 Each binary only includes the modules for that platform.
 
 
+list modules
+```bash
+magnet list
+``` 
+
+```bash
+magnet run windows all
+```   
+
+
+```bash
+magnet run windows discovery_sim
+```  
+
+
+
 ## tests
 ```bash
 cargo test --test ransom_note_test
