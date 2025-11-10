@@ -18,6 +18,7 @@ winapi = { version = "0.3.9", features = ["winuser", "memoryapi"] }
 image = "0.25.8"
 reqwest = { version = "0.12", features = ["blocking", "json", "rustls-tls"] }
 dirs = "5"
+num_cpus = "1.16"
 
 
 [lib]

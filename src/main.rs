@@ -86,6 +86,7 @@ fn main() -> Result<()> {
         use platforms::windows::actions::proc_inj::ProcInjSim;
         use platforms::windows::actions::screenshot_sim::ScreenshotSimulation;
         use platforms::windows::actions::http_traffic_sim::HttpTrafficSimulation;
+        use platforms::windows::actions::high_cpu_miner_sim::HighCpuMinerSimulation;
 
         runner.register(Box::new(RansomSimulation::default()));
         runner.register(Box::new(DiscoverySim::default()));
@@ -93,6 +94,7 @@ fn main() -> Result<()> {
         runner.register(Box::new(ProcInjSim::default()));
         runner.register(Box::new(ScreenshotSimulation::default()));
         runner.register(Box::new(HttpTrafficSimulation::default()));
+        runner.register(Box::new(HighCpuMinerSimulation::default()));
     }
 
     // Helper: collect modules grouped by OS
