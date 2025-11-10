@@ -16,7 +16,9 @@
 **Purpose:** modular, cross-platform (eventually) generator for benign telemetry and purple-team exercises.  
 Why the name?  
 Because this attracts SOC analysts and detection rules! 😜  
-As a secondary use case, Magnet can also be used as a decoy during red team engagements, in order to generate false positives noise and distract defenders.   
+As a secondary use case, Magnet can also be used as a decoy during red team engagements, in order to generate false positives noise and distract defenders. 
+From an architectural standpoint, Magnet is modular, allowing you to create as many modules as you like and modify existing ones without necessarily affecting the others.  
+
 
 
 > [!CAUTION]  
@@ -60,9 +62,13 @@ Run some of the windows modules:
 magnet run windows discovery_sim ransomware_sim high_cou_miner_sim
 ```  
 
+## activity logs  
+For each execution, Magnet writes detailed activity logs (in various formats) to
+`%USERPROFILE%\Documents\MagnetTelemetry`.  
+Activity artifacts may also be created in that directory or in other locations, depending on the module:  
+for example, in the ransomware simulation, the encrypted files are stored in the `MagnetTelemetry` folder, while the ransom note is placed on the user's `Desktop`.    
 
-
-### tests  
+## tests  
 Some modules already implement unit testing, for example:  
 ```bash
 cargo test --test ransom_note_test
