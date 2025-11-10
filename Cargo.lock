@@ -327,6 +327,7 @@ dependencies = [
  "regex",
  "serde",
  "serde_json",
+ "winapi",
 ]
 
 [[package]]

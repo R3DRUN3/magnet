@@ -83,10 +83,12 @@ fn main() -> Result<()> {
         use platforms::windows::actions::discovery_sim::DiscoverySim;
         use platforms::windows::actions::ransomware_sim::RansomSimulation;
         use platforms::windows::actions::wifi_creds::WifiCreds;
+        use platforms::windows::actions::proc_inj::ProcInjSim;
 
         runner.register(Box::new(RansomSimulation::default()));
         runner.register(Box::new(DiscoverySim::default()));
         runner.register(Box::new(WifiCreds::default()));
+        runner.register(Box::new(ProcInjSim::default()));
     }
 
     // Helper: collect modules grouped by OS
