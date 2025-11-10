@@ -85,12 +85,14 @@ fn main() -> Result<()> {
         use platforms::windows::actions::wifi_creds::WifiCreds;
         use platforms::windows::actions::proc_inj::ProcInjSim;
         use platforms::windows::actions::screenshot_sim::ScreenshotSimulation;
+        use platforms::windows::actions::http_traffic_sim::HttpTrafficSimulation;
 
         runner.register(Box::new(RansomSimulation::default()));
         runner.register(Box::new(DiscoverySim::default()));
         runner.register(Box::new(WifiCreds::default()));
         runner.register(Box::new(ProcInjSim::default()));
         runner.register(Box::new(ScreenshotSimulation::default()));
+        runner.register(Box::new(HttpTrafficSimulation::default()));
     }
 
     // Helper: collect modules grouped by OS
