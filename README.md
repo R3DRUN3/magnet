@@ -43,9 +43,14 @@ cargo build --target x86_64-pc-windows-msvc --release
 For Linux: 
 ```bash
 cargo build --target x86_64-unknown-linux-gnu --release
-```  
+``` 
 
-Each binary only includes the modules for that platform.
+
+Each binary only includes the modules for that platform.  
+
+> [!WARNING]  
+> First compilation may take some minutes.  
+
 
 
 list modules
