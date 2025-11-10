@@ -38,16 +38,15 @@ This module demonstrates its value for testing detection rules and behavioral an
 
 ## Quickstart
 
-Donwload the release from github:  
+Donwload the [*release*](https://github.com/r3drun3/magnet/releases/) from github, for example:  
 ```bash
-curl -L -o magnet.zip https://github.com/r3drun3/magnet/releases/latest/download/magnet-windows-x86_64.zip
-Expand-Archive magnet.zip -DestinationPath magnet
-cd magnet
+curl -L -o magnet.zip https://github.com/R3DRUN3/magnet/releases/download/v0.2.0/magnet-v0.2.0-windows-x86_64.zip
 ```  
+Extract the archive and you are ready to go!  
 
 
 
-Compile locally:
+or compile locally:  
 
 For Windows: 
 ```bash
