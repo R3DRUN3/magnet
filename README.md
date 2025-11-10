@@ -1,6 +1,8 @@
 ﻿# Magnet  
 
-[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)  ![language](https://img.shields.io/badge/poweredby-rust-orange) ![Purple Team Badge](https://img.shields.io/badge/Team-Purple-purple)
+[![Release](https://github.com/R3DRUN3/magnet/actions/workflows/release.yml/badge.svg)](https://github.com/R3DRUN3/magnet/actions/workflows/release.yml) 
+[![Latest Release](https://img.shields.io/github/v/release/r3drun3/magnet?logo=github)](https://github.com/r3drun3/magnet/releases/latest)  
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/) ![Purple Team Badge](https://img.shields.io/badge/Team-Purple-purple)  
 
 <img src="./media/logo.png" alt="Magnet Logo" width="200">  
 
