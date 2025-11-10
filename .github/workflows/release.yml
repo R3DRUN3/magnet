@@ -9,26 +9,9 @@ permissions:
   contents: write
 
 jobs:
-  build-and-release:
-    name: Build & Release (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        include:
-          # -----------------------------------------------
-          # Linux build temporarily disabled — uncomment when Linux modules are added
-          # - os: ubuntu-latest
-          #   target: x86_64-unknown-linux-gnu
-          #   artifact_ext: tar.gz
-          #   archive_cmd: tar -czvf
-          #   binary_ext: ""
-          # -----------------------------------------------
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-            artifact_ext: zip
-            archive_cmd: powershell Compress-Archive -Path
-            binary_ext: ".exe"
+  release-windows:
+    name: Build & Release (Windows)
+    runs-on: windows-latest
 
     steps:
       - name: Checkout source
@@ -37,30 +20,24 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Build release binary
-        run: cargo build --release --target ${{ matrix.target }}
+      - name: Build Windows binary
+        run: cargo build --release --target x86_64-pc-windows-msvc
 
-      - name: Prepare release assets
+      - name: Prepare release package
         run: |
           mkdir release
-          cp README.md release/ 2> NUL || true
-          if [ "${{ matrix.os }}" = "Windows_NT" ]; then
-            # Windows build packaging
-            powershell Copy-Item "target\\${{ matrix.target }}\\release\\magnet.exe" release\\
-            powershell Compress-Archive -Path release\\* -DestinationPath magnet-${{ github.ref_name }}-windows-x86_64.zip
-          else
-            # Linux build packaging (currently disabled)
-            cp target/${{ matrix.target }}/release/magnet release/
-            tar -czvf magnet-${{ github.ref_name }}-linux-x86_64.tar.gz -C release .
-          fi
-        shell: bash
+          copy README.md release\
+          copy target\x86_64-pc-windows-msvc\release\magnet.exe release\
+          powershell Compress-Archive -Path release\* -DestinationPath magnet-${{ github.ref_name }}-windows-x86_64.zip
+        shell: cmd
 
-      - name: Upload release asset
+      - name: Show files for debug
+        run: dir
+        shell: cmd
+
+      - name: Upload compiled binary to release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            # magnet-${{ github.ref_name }}-linux-x86_64.tar.gz
-            magnet-${{ github.ref_name }}-windows-x86_64.zip
+          files: magnet-${{ github.ref_name }}-windows-x86_64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: matrix.os == 'windows-latest' # only upload once (Windows)

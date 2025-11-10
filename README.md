@@ -38,7 +38,16 @@ This module demonstrates its value for testing detection rules and behavioral an
 
 ## Quickstart
 
-Compile:
+Donwload the release from github:  
+```bash
+curl -L -o magnet.zip https://github.com/r3drun3/magnet/releases/latest/download/magnet-windows-x86_64.zip
+Expand-Archive magnet.zip -DestinationPath magnet
+cd magnet
+```  
+
+
+
+Compile locally:
 
 For Windows: 
 ```bash
