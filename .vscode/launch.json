@@ -6,7 +6,7 @@
       "type": "lldb",            
       "request": "launch",
       "program": "${workspaceFolder}/target/debug/magnet.exe",
-      "args": [],
+      "args": ["run", "windows", "ransomware_sim"],
       "cwd": "${workspaceFolder}",
       "env": {
         "RUST_BACKTRACE": "1"
