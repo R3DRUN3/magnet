@@ -16,11 +16,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-            artifact_ext: tar.gz
-            archive_cmd: tar -czvf
-            binary_ext: ""
+          # -----------------------------------------------
+          # Linux build temporarily disabled — uncomment when Linux modules are added
+          # - os: ubuntu-latest
+          #   target: x86_64-unknown-linux-gnu
+          #   artifact_ext: tar.gz
+          #   archive_cmd: tar -czvf
+          #   binary_ext: ""
+          # -----------------------------------------------
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             artifact_ext: zip
@@ -40,12 +43,13 @@ jobs:
       - name: Prepare release assets
         run: |
           mkdir release
-          cp README.md release/
+          cp README.md release/ 2> NUL || true
           if [ "${{ matrix.os }}" = "Windows_NT" ]; then
-            # This block is only used on Windows runners
+            # Windows build packaging
             powershell Copy-Item "target\\${{ matrix.target }}\\release\\magnet.exe" release\\
             powershell Compress-Archive -Path release\\* -DestinationPath magnet-${{ github.ref_name }}-windows-x86_64.zip
           else
+            # Linux build packaging (currently disabled)
             cp target/${{ matrix.target }}/release/magnet release/
             tar -czvf magnet-${{ github.ref_name }}-linux-x86_64.tar.gz -C release .
           fi
@@ -55,8 +59,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            magnet-${{ github.ref_name }}-linux-x86_64.tar.gz
+            # magnet-${{ github.ref_name }}-linux-x86_64.tar.gz
             magnet-${{ github.ref_name }}-windows-x86_64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: matrix.os == 'ubuntu-latest' # upload only once (after linux build)
+        if: matrix.os == 'windows-latest' # only upload once (Windows)
