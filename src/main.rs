@@ -88,6 +88,7 @@ fn main() -> Result<()> {
         use platforms::windows::actions::http_traffic_sim::HttpTrafficSimulation;
         use platforms::windows::actions::high_cpu_miner_sim::HighCpuMinerSimulation;
         use platforms::windows::actions::ps_elev_whoami::PsElevWhoami;
+        use platforms::windows::actions::add_admin_user::AdminUserAddSimulation;
 
         runner.register(Box::new(RansomSimulation::default()));
         runner.register(Box::new(DiscoverySim::default()));
@@ -96,7 +97,8 @@ fn main() -> Result<()> {
         runner.register(Box::new(ScreenshotSimulation::default()));
         runner.register(Box::new(HttpTrafficSimulation::default()));
         runner.register(Box::new(HighCpuMinerSimulation::default()));
-         runner.register(Box::new(PsElevWhoami::default()));
+        runner.register(Box::new(PsElevWhoami::default()));
+        runner.register(Box::new(AdminUserAddSimulation::default()));
     }
 
     // Helper: collect modules grouped by OS

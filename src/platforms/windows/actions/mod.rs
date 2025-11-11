@@ -6,3 +6,4 @@ pub mod screenshot_sim;
 pub mod http_traffic_sim;
 pub mod high_cpu_miner_sim;
 pub mod ps_elev_whoami;
+pub mod add_admin_user;
