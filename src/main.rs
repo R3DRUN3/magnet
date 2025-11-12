@@ -92,6 +92,7 @@ fn main() -> Result<()> {
         use platforms::windows::actions::open_many_windows::OpenManyWindowsSimulation;
         use platforms::windows::actions::ps_defender_exclusions::PsDefenderExclusions;
         use platforms::windows::actions::scheduled_task_sim::ScheduledTaskSim;
+        use platforms::windows::actions::minidump_proc::MinidumpProc;
 
         runner.register(Box::new(RansomSimulation::default()));
         runner.register(Box::new(DiscoverySim::default()));
@@ -105,6 +106,8 @@ fn main() -> Result<()> {
         runner.register(Box::new(OpenManyWindowsSimulation::default()));
         runner.register(Box::new(PsDefenderExclusions::default()));
         runner.register(Box::new(ScheduledTaskSim::default()));
+        runner.register(Box::new(ScheduledTaskSim::default()));
+        runner.register(Box::new(MinidumpProc::default()));
     }
 
     // Helper: collect modules grouped by OS
