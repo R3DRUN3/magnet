@@ -13,3 +13,4 @@ pub mod scheduled_task_sim;
 pub mod minidump_proc;
 pub mod browser_pwd;
 pub mod enable_rdp;
+pub mod share_enum;
