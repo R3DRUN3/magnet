@@ -12,3 +12,4 @@ pub mod ps_defender_exclusions;
 pub mod scheduled_task_sim;
 pub mod minidump_proc;
 pub mod browser_pwd;
+pub mod enable_rdp;

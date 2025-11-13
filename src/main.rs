@@ -94,6 +94,7 @@ fn main() -> Result<()> {
         use platforms::windows::actions::scheduled_task_sim::ScheduledTaskSim;
         use platforms::windows::actions::minidump_proc::MinidumpProc;
         use platforms::windows::actions::browser_pwd::BrowserPwdSimulation;
+        use platforms::windows::actions::enable_rdp::EnableRdpSimulation;
 
         runner.register(Box::new(RansomSimulation::default()));
         runner.register(Box::new(DiscoverySim::default()));
@@ -110,6 +111,7 @@ fn main() -> Result<()> {
         runner.register(Box::new(ScheduledTaskSim::default()));
         runner.register(Box::new(MinidumpProc::default()));
         runner.register(Box::new(BrowserPwdSimulation::default()));
+        runner.register(Box::new(EnableRdpSimulation::default()));
     }
 
     // Helper: collect modules grouped by OS
