@@ -89,6 +89,7 @@ fn main() -> Result<()> {
             browser_pwd::BrowserPwdSimulation,
             screenshot_sim::ScreenshotSimulation,
             ransomware_sim::RansomSimulation,
+            minidump_proc::MinidumpProc,
             http_traffic_sim::HttpTrafficSimulation,
             open_many_windows::OpenManyWindowsSimulation,
             network_port_scan::NetworkPortScanSimulation,
@@ -96,7 +97,7 @@ fn main() -> Result<()> {
             high_cpu_miner_sim::HighCpuMinerSimulation,
             scheduled_task_sim::ScheduledTaskSim,
             add_admin_user::AdminUserAddSimulation,
-            minidump_proc::MinidumpProc,
+            enable_ssh::EnableSshSimulation,
             enable_rdp::EnableRdpSimulation,
             proc_inj::ProcInjSim,
 
@@ -112,6 +113,7 @@ fn main() -> Result<()> {
             BrowserPwdSimulation,
             ScreenshotSimulation,
             RansomSimulation,
+            MinidumpProc,
             HttpTrafficSimulation,
             OpenManyWindowsSimulation,
             NetworkPortScanSimulation,
@@ -119,7 +121,7 @@ fn main() -> Result<()> {
             HighCpuMinerSimulation,
             ScheduledTaskSim,
             AdminUserAddSimulation,
-            MinidumpProc,
+            EnableSshSimulation,
             EnableRdpSimulation,
             ProcInjSim,   
             
