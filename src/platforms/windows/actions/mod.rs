@@ -19,6 +19,7 @@ pub mod install_python;
 pub mod enable_ssh;
 pub mod enable_winrm;
 pub mod startup_exec;
+pub mod pwd_guessing;
 
 
 mod macros;

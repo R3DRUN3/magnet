@@ -83,6 +83,7 @@ fn main() -> Result<()> {
         use platforms::windows::actions::{
             ps_defender_exclusions::PsDefenderExclusions,
             install_python::InstallPythonSimulation,
+            pwd_guessing::PwdGuessingSim,
             discovery_sim::DiscoverySim,
             ps_elev_whoami::PsElevWhoami,
             wifi_creds::WifiCreds,
@@ -109,6 +110,7 @@ fn main() -> Result<()> {
             runner,
             PsDefenderExclusions,
             InstallPythonSimulation,
+            PwdGuessingSim,
             DiscoverySim,
             PsElevWhoami,
             WifiCreds,
@@ -128,7 +130,6 @@ fn main() -> Result<()> {
             EnableWinRMSimulation,
             EnableRdpSimulation,
             ProcInjSim,   
-            
         );
     }
 
