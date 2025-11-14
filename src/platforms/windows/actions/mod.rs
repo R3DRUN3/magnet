@@ -20,6 +20,7 @@ pub mod enable_ssh;
 pub mod enable_winrm;
 pub mod startup_exec;
 pub mod pwd_guessing;
+pub mod registry_persistence;
 
 
 mod macros;
