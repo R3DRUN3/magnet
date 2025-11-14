@@ -38,7 +38,7 @@ This module demonstrates its value for testing detection rules and behavioral an
 
 ## Quickstart
 
-Donwload the [*release*](https://github.com/r3drun3/magnet/releases/) from github, for example:  
+Donwload the [*release*](https://github.com/r3drun3/magnet/releases/) you need from github, for example:  
 ```bash
 curl -L -o magnet.zip https://github.com/R3DRUN3/magnet/releases/download/v0.5.0/magnet-v0.5.0-windows-x86_64.zip
 ```  
@@ -55,7 +55,7 @@ cargo build --target x86_64-pc-windows-msvc --release
 
 
 
-For Linux: 
+For Linux (coming in the future): 
 ```bash
 cargo build --target x86_64-unknown-linux-gnu --release
 ``` 
@@ -105,13 +105,13 @@ magnet run windows discovery_sim ransomware_sim high_cpu_miner_sim
 
 
 
-## activity logs  
-For each execution, Magnet writes detailed activity logs (in various formats) to
+## Activity logs  
+For each execution, Magnet writes detailed activity logs (in various formats) to a fixed path, for example on windows:  
 `%USERPROFILE%\Documents\MagnetTelemetry`.  
 Activity artifacts may also be created in that directory or in other locations, depending on the module:  
 for example, in the ransomware simulation, the encrypted files are stored in the `MagnetTelemetry` folder, while the ransom note is placed on the user's `Desktop`.    
 
-## tests  
+## Tests  
 Some modules already implement unit testing, for example:  
 ```bash
 cargo test --test ransom_note_test
