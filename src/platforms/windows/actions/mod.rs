@@ -23,6 +23,7 @@ pub mod pwd_guessing;
 pub mod registry_persistence;
 pub mod record_mic;
 pub mod keylogger_sim;
+pub mod create_proc;
 
 
 mod macros;

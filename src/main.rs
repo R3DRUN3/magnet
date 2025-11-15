@@ -105,6 +105,7 @@ fn main() -> Result<()> {
             enable_rdp::EnableRdpSimulation,
             keylogger_sim::KeyloggerSim,
             record_mic::RecordMicSim,
+            create_proc::CreateProcSim,
             proc_inj::ProcInjSim,
 
         };
@@ -135,6 +136,7 @@ fn main() -> Result<()> {
             EnableRdpSimulation,
             KeyloggerSim,
             RecordMicSim,
+            CreateProcSim,
             ProcInjSim,   
         );
     }
