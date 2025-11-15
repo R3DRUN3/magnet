@@ -1,4 +1,4 @@
-//! Ensures winget is preconfigured and installs Python automatically.
+//! Ensures winget is preconfigured and installs Python automatically (T1105).
 //! Needs admin rights for full automation.
 
 use crate::core::config::Config;
@@ -155,7 +155,7 @@ impl Simulation for InstallPythonSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "install_python".into(),
+                action: format!("T1105 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no settings or installation run".into(),
                 artifact_path: Some(path.display().to_string()),
@@ -172,7 +172,7 @@ impl Simulation for InstallPythonSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "install_python".into(),
+                action: format!("T1105 - {}", self.name()),
                 status: "failed".into(),
                 details: format!("settings.json error: {}", e),
                 artifact_path: Some(path.display().to_string()),
@@ -190,7 +190,7 @@ impl Simulation for InstallPythonSimulation {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "install_python".into(),
+                    action: format!("T1105 - {}", self.name()),
                     status: "failed".into(),
                     details: format!("winget error: {}", e),
                     artifact_path: Some(path.display().to_string()),
@@ -222,7 +222,7 @@ impl Simulation for InstallPythonSimulation {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "install_python".into(),
+            action: format!("T1105 - {}", self.name()),
             status: "written".into(),
             details: result,
             artifact_path: Some(path.display().to_string()),

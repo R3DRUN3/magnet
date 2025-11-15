@@ -1,4 +1,4 @@
-//! Simulates rapid creation of multiple top-level overlapped windows via the Win32 API.
+//! Simulates DoS via rapid creation of multiple top-level overlapped windows (T1499.003).
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;
@@ -33,7 +33,7 @@ impl Simulation for OpenManyWindowsSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: self.name().into(),
+                action: format!("T1499.003 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no actual windows created".into(),
                 artifact_path: None,
@@ -126,7 +126,7 @@ impl Simulation for OpenManyWindowsSimulation {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: self.name().into(),
+            action: format!("T1499.003 - {}", self.name()),
             status: "completed".into(),
             details: format!("Opened and closed 150 windows in {} ms", elapsed),
             artifact_path: None,

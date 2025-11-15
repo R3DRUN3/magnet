@@ -135,7 +135,7 @@ impl Simulation for AdminUserAddSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: self.name().into(),
+                action: format!("T1136.001 - {}", self.name()),
                 status: "dry-run".into(),
                 details: format!("dry-run: would add '{}' to '{}'", username, group),
                 artifact_path: None,
@@ -152,7 +152,7 @@ impl Simulation for AdminUserAddSimulation {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: self.name().into(),
+                    action: format!("T1136.001 - {}", self.name()),
                     status: "failed".into(),
                     details: e.to_string(),
                     artifact_path: None,
@@ -179,7 +179,7 @@ impl Simulation for AdminUserAddSimulation {
         if let Err(e) = write_action_record(cfg, &ActionRecord {
         test_id: cfg.test_id.clone(),
         timestamp: Utc::now().to_rfc3339(),
-        action: "user_add".into(),
+        action: format!("T1136.001 - {}", self.name()),
         status: "telemetry".into(),
         details: serde_json::to_string(&telemetry).unwrap_or_default(),
         artifact_path: None,
@@ -195,7 +195,7 @@ impl Simulation for AdminUserAddSimulation {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: self.name().into(),
+            action: format!("T1136.001 - {}", self.name()),
             status: "ok".into(),
             details,
             artifact_path: None,

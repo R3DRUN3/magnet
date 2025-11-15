@@ -1,4 +1,4 @@
-//! Simulates persistence via the Windows Startup folder.
+//! Simulates persistence via the Windows Startup folder (T1547.001).  
 //!
 //! This module creates a benign script inside:
 //!   %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
@@ -133,7 +133,7 @@ impl Simulation for StartupExecSim {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "startup_exec".into(),
+                action: format!("T1547.001 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no startup script written".into(),
                 artifact_path: None,
@@ -157,7 +157,7 @@ impl Simulation for StartupExecSim {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "startup_exec".into(),
+                    action: format!("T1547.001 - {}", self.name()),
                     status: "failed".into(),
                     details: format!("script creation error: {}", e),
                     artifact_path: None,
@@ -176,7 +176,7 @@ impl Simulation for StartupExecSim {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "startup_exec".into(),
+            action: format!("T1547.001 - {}", self.name()),
             status: "written".into(),
             details: format!("startup script: {}", script_path.display()),
             artifact_path: Some(script_path.display().to_string()),

@@ -1,4 +1,4 @@
-//! Enables Windows RDP using registry edits + firewall rules,
+//! Enables Windows RDP using registry edits + firewall rules (T1021.001),
 //! then verifies listener on port 3389.
 //! This action requires admin privileges to run.
 
@@ -46,7 +46,7 @@ impl Simulation for EnableRdpSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "enable_rdp".to_string(),
+                action: format!("T1021.001 - {}", self.name()),
                 status: "dry-run".to_string(),
                 details: "dry-run: no registry changes, no firewall changes".to_string(),
                 artifact_path: None,
@@ -97,7 +97,7 @@ impl Simulation for EnableRdpSimulation {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "enable_rdp".to_string(),
+            action: format!("T1021.001 - {}", self.name()),
             status: if all_ok { "completed" } else { "partial" }.to_string(),
             details: format!(
                 "registry={}, firewall={}, verify={}",

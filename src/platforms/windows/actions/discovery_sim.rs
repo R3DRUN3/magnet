@@ -1,4 +1,4 @@
-//! Executes some common discovery commands.
+//! Executes some common discovery commands (T1082).
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;

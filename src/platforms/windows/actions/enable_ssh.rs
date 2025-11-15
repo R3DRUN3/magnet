@@ -1,4 +1,4 @@
-//! Windows SSH enabling module.
+//! Windows SSH enabling module (T1021.004).
 //!
 //! This module installs/starts OpenSSH Server and ensures port 22 is open,
 //! This action requires admin privileges to run.
@@ -81,7 +81,7 @@ impl Simulation for EnableSshSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "enable_ssh".into(),
+                action: format!("T1021.004 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no commands executed".into(),
                 artifact_path: None,
@@ -171,7 +171,7 @@ impl Simulation for EnableSshSimulation {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "enable_ssh".into(),
+            action: format!("T1021.004 - {}", self.name()),
             status: "written".into(),
             details: format!("SSH status: {}", port_status),
             artifact_path: None,

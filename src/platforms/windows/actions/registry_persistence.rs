@@ -1,4 +1,4 @@
-//! Simulates benign persistence using Windows Registry Run Keys.
+//! Simulates benign persistence using Windows Registry Run Keys (T1547.001).  
 //!
 //! This module:
 //!   1. Creates a small .cmd file in %TEMP%
@@ -192,7 +192,7 @@ impl Simulation for RegistryPersistenceSim {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "registry_persistence".into(),
+                action: format!("T1547.001 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no Run key created".into(),
                 artifact_path: None,
@@ -249,7 +249,7 @@ impl Simulation for RegistryPersistenceSim {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "registry_persistence".into(),
+            action: format!("T1547.001 - {}", self.name()),
             status: "written".into(),
             details: "Registry RunKey persistence simulated".into(),
             artifact_path: Some(artifact.display().to_string()),

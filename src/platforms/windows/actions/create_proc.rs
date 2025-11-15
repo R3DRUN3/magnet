@@ -1,4 +1,4 @@
-//! Simulation: Create a new process via `NtCreateUserProcess` (low-level).
+//! Simulation: Create a new process via the low-level `NtCreateUserProcess` API (T1106).
 //!
 //! This simulation spawns calc.exe via direct NTAPI calls and close the handle to it after 1 second.
 //! Meant to simulate stealthy process creation behavior often used by malware.
@@ -158,7 +158,7 @@ impl Simulation for CreateProcSim {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "create_proc".into(),
+                action: format!("T1106 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no process spawned".into(),
                 artifact_path: Some(out_path.display().to_string()),
@@ -174,7 +174,7 @@ impl Simulation for CreateProcSim {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "create_proc".into(),
+                    action: format!("T1106 - {}", self.name()),
                     status: "written".into(),
                     details: format!("Process created and handle closed after 1 ({}ms)", elapsed.as_millis()),
                     artifact_path: Some(out_path.display().to_string()),
@@ -188,7 +188,7 @@ impl Simulation for CreateProcSim {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "create_proc".into(),
+                    action: format!("T1106 - {}", self.name()),
                     status: "failed".into(),
                     details: format!("error: {}", e),
                     artifact_path: Some(out_path.display().to_string()),

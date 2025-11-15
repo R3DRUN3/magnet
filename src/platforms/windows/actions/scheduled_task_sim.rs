@@ -1,4 +1,4 @@
-//! Creation and execution of a benign Windows scheduled task.
+//! Creation and execution of a benign Windows scheduled task (T1053.005).  
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;
@@ -138,7 +138,7 @@ impl Simulation for ScheduledTaskSim {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "scheduled_task_sim".into(),
+                action: format!("T1053.005 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no scheduled task created".into(),
                 artifact_path: None,
@@ -169,7 +169,7 @@ impl Simulation for ScheduledTaskSim {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "scheduled_task_sim".into(),
+                action: format!("T1053.005 - {}", self.name()),
                 status: "failed".into(),
                 details: format!("create task error: {}", e),
                 artifact_path: Some(telemetry_dir.display().to_string()),
@@ -205,7 +205,7 @@ impl Simulation for ScheduledTaskSim {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "scheduled_task_sim".into(),
+            action: format!("T1053.005 - {}", self.name()),
             status: "written".into(),
             details: format!("Scheduled task executed; {}", details.lines().next().unwrap_or("")),
             artifact_path: Some(telemetry_dir.display().to_string()),

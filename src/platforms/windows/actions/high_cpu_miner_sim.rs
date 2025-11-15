@@ -1,4 +1,4 @@
-//! Simulates a short-lived high-CPU miner workload.
+//! Simulates a short-lived high-CPU miner workload (T1496.001).  
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;
@@ -106,7 +106,7 @@ impl Simulation for HighCpuMinerSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "high_cpu_miner_sim".into(),
+                action: format!("T1496.001 - {}", self.name()), 
                 status: "dry-run".into(),
                 details: format!("dry-run: no CPU load; intended duration {}s; workers {}", BURN_DURATION_SECS, default_worker_count()),
                 artifact_path: None,
@@ -197,7 +197,7 @@ impl Simulation for HighCpuMinerSimulation {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "high_cpu_miner_sim".into(),
+            action: format!("T1496.001 - {}", self.name()), 
             status: "written".into(),
             details: format!("CPU burn for {}s on {} workers; total iterations {}", BURN_DURATION_SECS, telemetry.worker_threads, telemetry.total_iterations),
             artifact_path: None,

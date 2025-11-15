@@ -74,6 +74,8 @@ As of now, this tool has been tested on the following OS:
 
 ## Modules
 
+Magnet modules are mapped to the [*MITRE ATT&CK*](https://attack.mitre.org/) framework. 
+
 list modules
 ```bash
 magnet list
@@ -88,6 +90,7 @@ Run some of the windows modules:
 ```bash
 magnet run windows discovery_sim ransomware_sim high_cpu_miner_sim
 ```  
+   
 
 > [!CAUTION]  
 > **Some modules require administrative privileges to run**.  

@@ -1,4 +1,4 @@
-//! Keylogger Simulation Module (requires user interaction).
+//! Keylogger Simulation Module (T1056.001 - requires user interaction).
 //!
 //! This module simulates keylogging behavior by capturing foreground window titles,
 //! active processes, and user input over a 10-second window. 
@@ -191,7 +191,7 @@ impl Simulation for KeyloggerSim {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "keylogger_sim".into(),
+                action: format!("T1056.001 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: keylogger logic skipped".into(),
                 artifact_path: Some(out.display().to_string()),
@@ -220,7 +220,7 @@ impl Simulation for KeyloggerSim {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "keylogger_sim".into(),
+                    action: format!("T1056.001 - {}", self.name()),
                     status: "written".into(),
                     details: format!(
                         "Keylogger simulation complete in {}ms",
@@ -237,7 +237,7 @@ impl Simulation for KeyloggerSim {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "keylogger_sim".into(),
+                    action: format!("T1056.001 - {}", self.name()),
                     status: "failed".into(),
                     details: format!("error: {}", e),
                     artifact_path: Some(out.display().to_string()),

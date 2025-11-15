@@ -1,5 +1,5 @@
 //! Records 10 seconds of audio from the system microphone and writes recorded.wav
-//! in the telemetry directory as a benign test artifact.
+//! in the telemetry directory as a benign test artifact (T1123). 
 
 use anyhow::{Context, Result};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
@@ -130,7 +130,7 @@ impl Simulation for RecordMicSim {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "record_mic".into(),
+                action: format!("T1123 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: microphone not accessed".into(),
                 artifact_path: Some(out.display().to_string()),
@@ -147,7 +147,7 @@ impl Simulation for RecordMicSim {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "record_mic".into(),
+                    action: format!("T1123 - {}", self.name()),
                     status: "written".into(),
                     details: format!(
                         "Recorded microphone audio to {} in {} ms",
@@ -167,7 +167,7 @@ impl Simulation for RecordMicSim {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "record_mic".into(),
+                    action: format!("T1123 - {}", self.name()),
                     status: "failed".into(),
                     details: format!("error: {}", e),
                     artifact_path: Some(out.display().to_string()),

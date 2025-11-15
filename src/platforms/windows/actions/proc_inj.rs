@@ -1,4 +1,4 @@
-//! Executes an embedded (safe) test payload via in-memory execution to validate process-injection detection.
+//! Executes an embedded (safe) test payload via in-memory execution to validate process-injection detection (T1055).
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;

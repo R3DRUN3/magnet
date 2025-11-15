@@ -1,4 +1,4 @@
-//! Adds Windows Defender exclusion paths via PowerShell for testing and simulation.
+//! Adds Windows Defender exclusion paths via PowerShell for testing and simulation (T1562.001). 
 //! This action requires admin privileges to run.
 
 use crate::core::config::Config;
@@ -110,7 +110,7 @@ impl Simulation for PsDefenderExclusions {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "ps_defender_exclusions".into(),
+                action: format!("T1562.001 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no PowerShell executed".into(),
                 artifact_path: None,
@@ -126,7 +126,7 @@ impl Simulation for PsDefenderExclusions {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "ps_defender_exclusions".into(),
+                action: format!("T1562.001 - {}", self.name()),
                 status: "failed".into(),
                 details: format!("add_exclusions error: {}", e),
                 artifact_path: None,
@@ -152,7 +152,7 @@ impl Simulation for PsDefenderExclusions {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "ps_defender_exclusions".into(),
+            action: format!("T1562.001 - {}", self.name()),
             status: "written".into(),
             details: "Successfully added Defender exclusions".into(),
             artifact_path: None,

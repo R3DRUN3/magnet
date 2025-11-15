@@ -1,4 +1,4 @@
-//! Windows WinRM enabling module.
+//! Windows WinRM enabling module (T1021.006).
 //!
 //! This module enables/starts WinRM, configures firewall rules, and confirms WinRM is reachable on TCP port 5985.
 //! This action requires admin privileges to run.
@@ -88,7 +88,7 @@ impl Simulation for EnableWinRMSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "enable_winrm".into(),
+                action: format!("T1021.006 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no commands executed".into(),
                 artifact_path: None,
@@ -199,7 +199,7 @@ impl Simulation for EnableWinRMSimulation {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "enable_winrm".into(),
+            action: format!("T1021.006 - {}", self.name()),
             status: "written".into(),
             details: format!(
                 "WinRM status: {}; Firewall: {}; Port: {}",

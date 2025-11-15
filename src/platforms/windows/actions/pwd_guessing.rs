@@ -1,4 +1,4 @@
-//! Simulates benign password guessing using Windows LogonUserW.
+//! Simulates password guessing using Windows LogonUserW (T1110.001).
 //!
 //! 1. Enumerates local Administrator accounts
 //! 2. Attempts several test passwords via WinAPI LogonUserW()
@@ -198,7 +198,7 @@ impl Simulation for PwdGuessingSim {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "pwd_guessing".into(),
+                action: format!("T1110.001 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no password guessing executed".into(),
                 artifact_path: None,
@@ -220,7 +220,7 @@ impl Simulation for PwdGuessingSim {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "pwd_guessing".into(),
+                    action: format!("T1110.001 - {}", self.name()),
                     status: "failed".into(),
                     details: format!("admin enum error: {}", e),
                     artifact_path: None,
@@ -287,7 +287,7 @@ impl Simulation for PwdGuessingSim {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "pwd_guessing".into(),
+            action: format!("T1110.001 - {}", self.name()),
             status: "written".into(),
             details: format!(
                 "attempted {} guesses across {} accounts",

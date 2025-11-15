@@ -1,4 +1,4 @@
-//! Enumerates local and network SMB shares using common attacker TTPs.
+//! Enumerates local and network SMB shares (T1135).  
 //! SAFE: Read-only enumeration. No share access, no modification.
 
 use crate::core::config::Config;
@@ -38,7 +38,7 @@ impl Simulation for ShareEnumSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "share_enum".to_string(),
+                action: format!("T1135 - {}", self.name()),
                 status: "dry-run".to_string(),
                 details: "Would run net view, net share, PowerShell, and WMI enumeration".to_string(),
                 artifact_path: None,
@@ -82,7 +82,7 @@ impl Simulation for ShareEnumSimulation {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "share_enum".to_string(),
+            action: format!("T1135 - {}", self.name()),
             status: "completed".to_string(),
             details,
             artifact_path: None,

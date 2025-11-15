@@ -1,4 +1,4 @@
-//! Reetrieves wifi credentials stored in windows.  
+//! Retrieves wifi credentials stored in windows (TA0006).  
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;
@@ -191,7 +191,7 @@ impl Simulation for WifiCreds {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "wifi_creds".into(),
+                action: format!("TA0006 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no profiles extracted".into(),
                 artifact_path: None,
@@ -209,7 +209,7 @@ impl Simulation for WifiCreds {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "wifi_creds".into(),
+                    action: format!("TA0006 - {}", self.name()),
                     status: "failed".into(),
                     details: format!("list error: {}", e),
                     artifact_path: None,
@@ -225,7 +225,7 @@ impl Simulation for WifiCreds {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "wifi_creds".into(),
+                action: format!("TA0006 - {}", self.name()),
                 status: "no-profiles".into(),
                 details: "no Wi-Fi profiles detected on this host".into(),
                 artifact_path: None,
@@ -279,7 +279,7 @@ impl Simulation for WifiCreds {
                 let act = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "wifi_creds".into(),
+                    action: format!("TA0006 - {}", self.name()),
                     status: "written".into(),
                     details: format!("Wrote {} profiles to wifi_credentials_{}.jsonl", record.entries.len(), cfg.test_id),
                     artifact_path: Some(format!("wifi_credentials_{}.jsonl", cfg.test_id)),
@@ -294,7 +294,7 @@ impl Simulation for WifiCreds {
                 let act = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "wifi_creds".into(),
+                    action: format!("TA0006 - {}", self.name()),
                     status: "failed".into(),
                     details: format!("telemetry error: {}", e),
                     artifact_path: None,

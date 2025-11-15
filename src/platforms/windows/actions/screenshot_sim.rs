@@ -1,4 +1,4 @@
-//! Simulates a program that takes screenshots.  
+//! Simulates a program that takes screenshots (T1113).  
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;
@@ -161,7 +161,7 @@ impl Simulation for ScreenshotSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "screenshot".into(),
+                action: format!("T1113 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: screenshot not captured".into(),
                 artifact_path: Some(shot_path.display().to_string()),
@@ -193,7 +193,7 @@ impl Simulation for ScreenshotSimulation {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "screenshot".into(),
+                    action: format!("T1113 - {}", self.name()),
                     status: "written".into(),
                     details: "screenshot capture completed".into(),
                     artifact_path: Some(shot_path.display().to_string()),
@@ -208,7 +208,7 @@ impl Simulation for ScreenshotSimulation {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "screenshot".into(),
+                    action: format!("T1113 - {}", self.name()),
                     status: "failed".into(),
                     details: format!("capture error: {}", e),
                     artifact_path: Some(shot_path.display().to_string()),

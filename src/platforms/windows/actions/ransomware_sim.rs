@@ -1,4 +1,4 @@
-//! Simulates realistic ransomware behavior for purple-team testing.
+//! Simulates realistic ransomware behavior for purple-team testing (T1486 - T1490).  
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;
@@ -220,7 +220,7 @@ impl Simulation for RansomSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "ransomware_sim".into(),
+                action: format!("T1486 - T1490 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no repo created, no files encrypted".into(),
                 artifact_path: Some(note_path.display().to_string()),
@@ -247,7 +247,7 @@ impl Simulation for RansomSimulation {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "ransomware_sim".into(),
+                    action: format!("T1486 - T1490 - {}", self.name()),
                     status: "failed".into(),
                     details: format!("create files error: {}", e),
                     artifact_path: Some(repo.display().to_string()),
@@ -309,7 +309,7 @@ impl Simulation for RansomSimulation {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "ransomware_sim".into(),
+                    action: format!("T1486 - T1490 - {}", self.name()),
                     status: "failed".into(),
                     details: format!("note write error: {}", e),
                     artifact_path: Some(note_path.display().to_string()),
@@ -348,7 +348,7 @@ impl Simulation for RansomSimulation {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "ransomware_sim".into(),
+            action: format!("T1486 - T1490 - {}", self.name()),
             status: "written".into(),
             details: format!("Repo: {} created; {} files encrypted", repo.display(), encrypted),
             artifact_path: Some(note_path.display().to_string()),

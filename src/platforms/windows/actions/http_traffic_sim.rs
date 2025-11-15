@@ -1,4 +1,4 @@
-//! Simulates a short-lived high HTTP traffic against a public domain.
+//! Simulates a short-lived high HTTP traffic against a public domain (TA0010).  
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;
@@ -157,7 +157,7 @@ impl Simulation for HttpTrafficSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "http_traffic_sim".into(),
+                action: format!("TA0010 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no network requests made".into(),
                 artifact_path: None,
@@ -195,7 +195,7 @@ impl Simulation for HttpTrafficSimulation {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "http_traffic_sim".into(),
+            action: format!("TA0010 - {}", self.name()),
             status: "written".into(),
             details: format!("Performed {} HTTP requests to {} ({} successes, avg {:.2}ms)",
                              DEFAULT_REQUEST_COUNT, TARGET_URL, succeeded, avg_latency),

@@ -1,4 +1,4 @@
-//! Executes process dump via MiniDump.
+//! Executes process dump via MiniDump (T1003).
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;

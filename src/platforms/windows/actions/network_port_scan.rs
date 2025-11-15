@@ -1,5 +1,5 @@
 //! Network port scanning simulation: detect local IPv4, find the first alive host,
-//! then port-scan that host.
+//! then port-scan that host (T1046).
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;
@@ -95,7 +95,7 @@ impl Simulation for NetworkPortScanSimulation {
                     let rec = ActionRecord {
                         test_id: cfg.test_id.clone(),
                         timestamp: Utc::now().to_rfc3339(),
-                        action: self.name().into(),
+                        action: format!("T1046 - {}", self.name()),
                         status: "failed".into(),
                         details: "No local IPv4 detected".into(),
                         artifact_path: None,
@@ -117,7 +117,7 @@ impl Simulation for NetworkPortScanSimulation {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: self.name().into(),
+                    action: format!("T1046 - {}", self.name()),
                     status: "dry-run".into(),
                     details: "dry-run: local-ip-only".into(),
                     artifact_path: None,
@@ -155,7 +155,7 @@ impl Simulation for NetworkPortScanSimulation {
                     let rec = ActionRecord {
                         test_id: cfg.test_id.clone(),
                         timestamp: Utc::now().to_rfc3339(),
-                        action: self.name().into(),
+                        action: format!("T1046 - {}", self.name()),
                         status: "failed".into(),
                         details: "no alive hosts detected".into(),
                         artifact_path: None,
@@ -238,7 +238,7 @@ impl Simulation for NetworkPortScanSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: self.name().into(),
+                action: format!("T1046 - {}", self.name()),
                 status: "written".into(),
                 details: format!(
                     "Local IP: {}; Host: {}; Open ports: {:?}",

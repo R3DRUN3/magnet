@@ -1,5 +1,5 @@
-//! Open powershell as administrator and launch a simple command.
-//! This action is not fully automated but requires user manual interaction.
+//! Open powershell as administrator and launch a simple command (T1059.001).
+//! This action is not fully automated but requires user manual interaction (if not launched as admin).
 
 use crate::core::config::Config;
 use crate::core::simulation::Simulation;
@@ -156,7 +156,7 @@ impl Simulation for PsElevWhoami {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "ps_elev_whoami".into(),
+                action: format!("T1059.001 - {}", self.name()),
                 status: "dry-run".into(),
                 details: format!(
                     "dry-run: would run PowerShell: Set-ExecutionPolicy Bypass -Scope Process; whoami → {}",
@@ -275,7 +275,7 @@ impl Simulation for PsElevWhoami {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "ps_elev_whoami".into(),
+            action: format!("T1059.001 - {}", self.name()),
             status: "written".into(),
             details: format!(
                 "whoami(stdout_len={}): {}; elevated_status: {}",

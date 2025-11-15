@@ -1,4 +1,4 @@
-//! Extracts saved browser passwords for Chrome/Edge/Firefox on Windows and writes
+//! Extracts saved browser passwords for Chrome/Edge/Firefox (T1555.003) on Windows and writes
 //! telemetry + action records to the same Magnet telemetry path in Documents.
 
 use crate::core::config::Config;
@@ -386,7 +386,7 @@ impl Simulation for BrowserPwdSimulation {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "browser_pwd".into(),
+                action: format!("T1555.003 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no extraction performed".into(),
                 artifact_path: None,
@@ -411,7 +411,7 @@ impl Simulation for BrowserPwdSimulation {
                 let rec = ActionRecord {
                     test_id: cfg.test_id.clone(),
                     timestamp: Utc::now().to_rfc3339(),
-                    action: "browser_pwd".into(),
+                    action: format!("T1555.003 - {}", self.name()),
                     status: "failed".into(),
                     details: msg.clone(),
                     artifact_path: None,
@@ -433,7 +433,7 @@ impl Simulation for BrowserPwdSimulation {
 
         if chrome_login.exists() {
             chrome_found = true;
-            logger::info(&format!("Chrome Login Data found at {}", chrome_login.display()));
+            logger::info(&format!("\nChrome Login Data found at {}", chrome_login.display()));
             match Self::extract_chrome_like(&chrome_login, &mut errors) {
                 Ok(entries) => {
                     // For telemetry purposes write a small human-readable artifact file in telemetry dir
@@ -550,7 +550,7 @@ impl Simulation for BrowserPwdSimulation {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "browser_pwd".into(),
+            action: format!("T1555.003 - {}", self.name()),
             status: "written".into(),
             details: format!("chrome_found={} edge_found={} firefox_profiles_scanned={}", chrome_found, edge_found, firefox_profiles_scanned),
             artifact_path: artifact_paths.get(0).cloned(),

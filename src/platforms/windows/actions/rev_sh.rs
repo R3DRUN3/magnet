@@ -1,4 +1,4 @@
-//! Simulation: Reverse Shell Server (bounded TCP command interface).
+//! Simulation: Reverse Shell Server (T1059.003).
 //!
 //! Opens a TCP server on port 4444 and accepts a single client connection.  
 
@@ -198,7 +198,7 @@ impl Simulation for RevSh {
             let rec = ActionRecord {
                 test_id: cfg.test_id.clone(),
                 timestamp: Utc::now().to_rfc3339(),
-                action: "rev_sh".into(),
+                action: format!("T1059.003 - {}", self.name()),
                 status: "dry-run".into(),
                 details: "dry-run: no listener started".into(),
                 artifact_path: Some(out_path.display().to_string()),
@@ -227,7 +227,7 @@ impl Simulation for RevSh {
         let rec = ActionRecord {
             test_id: cfg.test_id.clone(),
             timestamp: Utc::now().to_rfc3339(),
-            action: "rev_sh".into(),
+            action: format!("T1059.003 - {}", self.name()),
             status: status.into(),
             details,
             artifact_path: Some(out_path.display().to_string()),
