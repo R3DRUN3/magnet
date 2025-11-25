@@ -20,7 +20,7 @@
 > Because this attracts SOC analysts and detection rules! 😜   
 
 
-As a secondary use case, Magnet can also be used as a decoy during red team engagements, in order to generate false positives noise and distract defenders 😈    
+As a secondary use case, Magnet can also be used as a decoy during red team engagements, to generate false positive noise and distract defenders 😈    
 From an architectural standpoint, Magnet is modular, allowing you to create as many modules as you like and modify existing ones without necessarily affecting the others.  
 
 
@@ -32,21 +32,21 @@ From an architectural standpoint, Magnet is modular, allowing you to create as m
 ## Ok, but why?  
 What better way to assess the utility of this tool than by directly examining one of its modules?  
 Consider, for example, the [*Ransomware Simulation for Windows*](./src/platforms/windows/actions/ransomware_sim.rs) action:   
-it generates thousands of files and encrypts them, attempts to delete shadow copies with older timestamps, and finally places a ransom note on the desktop.    
+It generates thousands of files and encrypts them, attempts to delete shadow copies with older timestamps, and finally places a ransom note on the desktop.    
 This module demonstrates its value for testing detection rules and behavioral analytics specifically designed to identify ransomware activity.  
 
 
 ## Quickstart
 
-Donwload the [*release*](https://github.com/r3drun3/magnet/releases/) you need from github, for example:  
+Download the [*release*](https://github.com/r3drun3/magnet/releases/) you need from github, for example:  
 ```bash
 curl -L -o magnet.zip https://github.com/R3DRUN3/magnet/releases/download/v0.8.0/magnet-v0.8.0-windows-x86_64.zip
 ```  
-Extract the archive and you are ready to go!  
+Extract the archive, and you are ready to go!  
 
 
 
-or compile locally:  
+Or compile locally:  
 
 For Windows: 
 ```bash
@@ -81,12 +81,12 @@ list modules
 magnet list
 ``` 
 
-Run all windows modules:  
+Run all Windows modules:  
 ```bash
 magnet run windows all
 ```   
 
-Run some of the windows modules:  
+Run some of the Windows modules:  
 ```bash
 magnet run windows discovery_sim ransomware_sim high_cpu_miner_sim
 ```  
@@ -94,25 +94,25 @@ magnet run windows discovery_sim ransomware_sim high_cpu_miner_sim
 
 > [!CAUTION]  
 > **Some modules require administrative privileges to run**.  
-> Magnet prioritizes non-intrusive modules that only aim to simulate suspicious or malicious activity but some of the modules may still be detected by EDRs:       
+> Magnet prioritizes non-intrusive modules that only aim to simulate suspicious or malicious activity, but EDRs may still detect some of the modules:       
 > **USE WITH CAUTION AND RUN ONLY ON AUTHORIZED SYSTEMS !!**  
 
 > [!TIP]
-> In order to add a module/action, follow these instructions:    
-> - write the module inside the parent OS folder, for example [*here*](./src/platforms/windows/actions/) are all the windows ones.  
+> To add a module/action, follow these instructions:    
+> - write the module inside the parent OS folder; for example, [*here*](./src/platforms/windows/actions/) contains all the Windows ones.  
 > - add the module in [*mod.rs*](./src/platforms/windows/actions/mod.rs).  
 > - register the runner in [*main.rs*](./src/main.rs).  
-> **For seamless integration, make sure new modules follow signatures and contracts of existing ones**  
+> **For seamless integration, make sure new modules follow the signatures and contracts of existing ones**  
 
 
 
 
 
 ## Activity logs  
-For each execution, Magnet writes detailed activity logs (in various formats) to a fixed path, for example on windows:  
+For each execution, Magnet writes detailed activity logs (in various formats) to a fixed path, for example, on Windows:  
 `%USERPROFILE%\Documents\MagnetTelemetry`.  
 Activity artifacts may also be created in that directory or in other locations, depending on the module:  
-for example, in the ransomware simulation, the encrypted files are stored in the `MagnetTelemetry` folder, while the ransom note is placed on the user's `Desktop`.    
+For example, in the ransomware simulation, the encrypted files are stored in the `MagnetTelemetry` folder, while the ransom note is placed on the user's `Desktop`.    
 
 ## Tests  
 Some modules already implement unit testing, for example:  
