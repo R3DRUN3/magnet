@@ -96,6 +96,7 @@ fn main() -> Result<()> {
             dns_query_storm::DnsQueryStormSimulation,
             http_traffic_sim::HttpTrafficSimulation,
             open_many_windows::OpenManyWindowsSimulation,
+            named_pipe_sim::NamedPipeSimulation,
             network_port_scan::NetworkPortScanSimulation,
             share_enum::ShareEnumSimulation,
             high_cpu_miner_sim::HighCpuMinerSimulation,
@@ -132,6 +133,7 @@ fn main() -> Result<()> {
             DnsQueryStormSimulation,
             HttpTrafficSimulation,
             OpenManyWindowsSimulation,
+            NamedPipeSimulation,
             NetworkPortScanSimulation,
             ShareEnumSimulation,
             HighCpuMinerSimulation,
@@ -147,7 +149,7 @@ fn main() -> Result<()> {
             RecordMicSim,
             RevSh,
             CreateProcSim,
-            ProcInjSim,   
+            ProcInjSim,
         );
     }
 
