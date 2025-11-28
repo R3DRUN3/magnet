@@ -28,6 +28,7 @@ pub mod rev_sh;
 pub mod directory_permissions;
 pub mod edr_discovery;
 pub mod cred_manager_access;
+pub mod dns_query_storm;
 
 
 mod macros;
