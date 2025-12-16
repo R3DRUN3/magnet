@@ -33,6 +33,7 @@ pub mod named_pipe_sim;
 pub mod dll_load_storm;
 pub mod get_env_vars;
 pub mod get_clipboard;
+pub mod time_manipulation_sim;
 
 
 mod macros;
