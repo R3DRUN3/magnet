@@ -31,6 +31,7 @@ pub mod cred_manager_access;
 pub mod dns_query_storm;
 pub mod named_pipe_sim;
 pub mod dll_load_storm;
+pub mod get_env_vars;
 
 
 mod macros;
