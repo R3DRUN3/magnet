@@ -40,7 +40,7 @@ This module demonstrates its value for testing detection rules and behavioral an
 
 Download the [*release*](https://github.com/r3drun3/magnet/releases/) you need from github, for example:  
 ```bash
-curl -L -o magnet.zip https://github.com/R3DRUN3/magnet/releases/download/v0.9.0/magnet-v0.9.0-windows-x86_64.zip
+curl -L -o magnet.zip https://github.com/R3DRUN3/magnet/releases/download/v0.10.0/magnet-v0.10.0-windows-x86_64.zip
 ```  
 Extract the archive, and you are ready to go!  
 
