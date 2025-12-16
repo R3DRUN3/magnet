@@ -32,6 +32,7 @@ pub mod dns_query_storm;
 pub mod named_pipe_sim;
 pub mod dll_load_storm;
 pub mod get_env_vars;
+pub mod get_clipboard;
 
 
 mod macros;
